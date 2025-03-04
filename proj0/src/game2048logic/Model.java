@@ -168,12 +168,16 @@ public class Model {
         while (targetY + 1 < board.size()) {
             if (board.tile(x, (targetY + 1))  == null) {
                 targetY++;
-            } else {
-                break;
             }
+            else {
+                if (board.tile(x, (targetY + 1)).value() == board.tile(x, y).value() && !tile(x, (targetY + 1)).wasMerged()) {
+                    targetY++;
+                    break;
+                } else
+                    break;
+                }
         }
         board.move(x, targetY, currTile);
-
         // TODO: Tasks 5, 6, and 10. Fill in this function.
     }
 
