@@ -3,6 +3,7 @@ package game2048logic;
 import game2048rendering.Board;
 import game2048rendering.Side;
 import game2048rendering.Tile;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.Formatter;
 
@@ -86,6 +87,13 @@ public class Model {
      * */
     public boolean emptySpaceExists() {
         // TODO: Task 1. Fill in this function.
+        for (int i = 0; i < board.size(); i++) {
+            for (int j = 0; j < board.size(); j++) {
+                if (board.tile(i, j) == null) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -96,6 +104,13 @@ public class Model {
      */
     public boolean maxTileExists() {
         // TODO: Task 2. Fill in this function.
+        for (int i = 0; i < board.size(); i++) {
+            for (int j = 0; j < board.size(); j++) {
+                if (board.tile(i, j) != null && board.tile(i, j).value() == MAX_PIECE) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -106,9 +121,31 @@ public class Model {
      * 2. There are two adjacent tiles with the same value.
      */
     public boolean atLeastOneMoveExists() {
-        // TODO: Task 3. Fill in this function.
+        int[][] directions = {
+                {1, 0},
+                {0, 1},
+                {-1, 0},
+                {0, -1}
+        };
+
+        for (int i = 0; i < board.size(); i++) {
+            for (int j = 0; j < board.size(); j++) {
+                if (board.tile(i, j) == null)
+                    return true;
+                for (int[] k : directions) {
+                    int xNew = i + k[0];
+                    int yNew = j + k[1];
+                    int value = board.tile(i, j).value();
+                    if ((xNew >= 0 && yNew >= 0 && xNew < board.size() && yNew < board.size() && board.tile(xNew, yNew).value() == value)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
         return false;
     }
+
 
     /**
      * Moves the tile at position (x, y) as far up as possible.
@@ -128,6 +165,14 @@ public class Model {
         Tile currTile = board.tile(x, y);
         int myValue = currTile.value();
         int targetY = y;
+        while (targetY + 1 < board.size()) {
+            if (board.tile(x, (targetY + 1))  == null) {
+                targetY++;
+            } else {
+                break;
+            }
+        }
+        board.move(x, targetY, currTile);
 
         // TODO: Tasks 5, 6, and 10. Fill in this function.
     }
