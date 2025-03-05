@@ -136,7 +136,7 @@ public class Model {
                     int xNew = i + k[0];
                     int yNew = j + k[1];
                     int value = board.tile(i, j).value();
-                    if ((xNew >= 0 && yNew >= 0 && xNew < board.size() && yNew < board.size() && board.tile(xNew, yNew).value() == value)) {
+                    if ((xNew >= 0 && yNew >= 0 && xNew < board.size() && yNew < board.size() && board.tile(xNew, yNew) != null &&  board.tile(xNew, yNew).value() == value)) {
                         return true;
                     }
                 }
@@ -171,6 +171,7 @@ public class Model {
             }
             else {
                 if (board.tile(x, (targetY + 1)).value() == board.tile(x, y).value() && !tile(x, (targetY + 1)).wasMerged()) {
+                    score += 2 * board.tile(x, (targetY + 1)).value();
                     targetY++;
                     break;
                 } else
@@ -188,10 +189,22 @@ public class Model {
      * */
     public void tiltColumn(int x) {
         // TODO: Task 7. Fill in this function.
+        int l = board.size();
+        for (int i = l - 2; i >= 0; i--) {
+            if (board.tile(x, i) != null)
+                moveTileUpAsFarAsPossible(x, i);
+        }
     }
 
     public void tilt(Side side) {
         // TODO: Tasks 8 and 9. Fill in this function.
+        int l = board.size();
+        board.setViewingPerspective(side);
+        for (int i = 0; i < l; i++) {
+            tiltColumn(i);
+        }
+
+        board.setViewingPerspective(Side.NORTH);
     }
 
     /** Tilts every column of the board toward SIDE.
